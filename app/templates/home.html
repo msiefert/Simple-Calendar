@@ -1,0 +1,75 @@
+<html>
+<head>
+<style>
+table   { table-layout: fixed; width: 100%; height: 80%; border-collapse: collapse; border: 5px solid black; }
+td      { border: 3px solid black; text-align = "left"; vertical-align: text-top; }
+th      { width = "12%"; height: 10%; }
+h1      { text-align: center; font-size: 225%; }
+.previous { float: left; padding-left: 100px; padding-top: 20px; font-size: 150%; }
+.next   { float: right; padding-right: 100px; padding-top: 20px; font-size: 150%; }
+.day a  { display: block; width: 100%; height: 100%; }
+</style>
+</head>
+{% extends "base.html" %}
+{% block content %}
+    <div>
+        <a class = "previous"; href="{{ url_for('home') + (displayed_month - 1)|string() }}">Previous</a>
+        <a class = "next"; href="{{ url_for('home') + (displayed_month + 1)|string() }}">Next</a>
+    </div>
+    <h1>{{ title }}</h1>
+    <table>
+      <tr>
+        <th>Monday</th>
+        <th>Tuesday</th>
+        <th>Wednesday</th>
+        <th>Thursday</th>
+        <th>Friday</th>
+        <th>Saturday</th>   
+        <th>Sunday</th>
+      </tr>
+      
+      <!-- Loop through all boxes to be in the table.-->
+      {% for table_box_index in range(0, (((blank_days_at_start + days_in_month + 6) / 7)|int() * 7)) %}
+        <!-- Start new row if first of the week. -->
+        {% if (table_box_index % 7) == 0 %}
+            <tr>
+        {% endif %}
+        
+        <!-- Make a blank box if within the number of blank days at beginning of month. -->
+        {% if table_box_index < blank_days_at_start %}
+            <td></td>
+        {% endif %}
+        
+        <!-- Make a blank box if after the final day of the month. -->
+        {% if table_box_index >= (blank_days_at_start + days_in_month) %}
+            <td></td>
+        {% endif %}
+            
+        <!-- Make a box with the day of the month inside it. -->
+        {% if table_box_index >= blank_days_at_start and table_box_index < (blank_days_at_start + days_in_month) %}
+            <td class = "day";>
+                <div><a href="{{ url_for('event') + 
+                    displayed_date.month|string() + 
+                    '/' + (table_box_index + 1 - blank_days_at_start)|string() + 
+                    '/' + displayed_date.year|string() }}"; >
+                    {{ table_box_index + 1 - blank_days_at_start }}
+                
+                {% for event in list_of_events %}
+                    {% if event.user == user.id %}
+                        {% if event.date == 
+                            (displayed_date.month|string + '/' + (table_box_index + 1 - blank_days_at_start)|string + '/' + displayed_date.year|string) %}
+                            <a href="{{ url_for('event') + event.id|string() }}"; >{{ event.title }}</a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </a></div></td>
+        {% endif %}
+        
+        <!-- End current row if last day of the week. -->
+        {% if (table_box_index % 7) == 6 %}
+            </tr>
+        {% endif %}
+      {% endfor %}
+    </table>
+{% endblock %}
+</html>

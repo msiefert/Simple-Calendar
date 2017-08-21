@@ -1,0 +1,50 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Create New Event</h1>
+  <form action = "" method = "post" name = "event">
+      {{ form.hidden_tag() }}
+      <p>
+           Title:<br>
+           {{ form.title(size = 30) }}<br>
+           {% for error in form.title.errors %}
+                <span style = "color: red;">[{{ error }}]</span>
+           {% endfor %}<br>
+      <p>
+      <p>
+          Date:<br>
+          {{ form.date(size = 30) }}<br>
+          {% for error in form.date.errors %}
+                <span style = "color: red;">[{{ error }}]</span>
+          {% endfor %}<br>
+      </p>
+      <p>
+           Time:<br>
+           {{ form.time(size = 30) }}<br>
+           {% for error in form.time.errors %}
+                <span style = "color: red;">[{{ error }}]</span>
+           {% endfor %}<br>
+       </p>
+       <p>
+           Description:<br>
+           {{ form.description(size = 300) }}<br>
+           {% for error in form.description.errors %}
+                <span style = "color: red;">[{{ error }}]</span>
+           {% endfor %}<br>
+       </p>
+      {% if view_only %}
+            <div></div>
+            <p>
+                Share with:<br>
+                {{ form.recipient(size = 30) }}<br>
+                {% for error in form.recipient.errors %}
+                        <span style = "color: red;">[{{ error }}]</span>
+                {% endfor %}<br>
+            </p>
+            <p><input type = "submit" value = "Share Event"></p>   
+      {% else %}
+            <p><input type = "submit" value = "Create Event"></p>
+      {% endif %}
+  </form>
+{% endblock %}

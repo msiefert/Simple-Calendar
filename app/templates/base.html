@@ -1,0 +1,31 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - Calendar</title>
+    {% else %}
+    <title>Calendar</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>Calendar:
+        {% if g.user.is_authenticated %}
+        <a href="{{ url_for('home') }}">Current Month View</a>
+        | <a href="{{ url_for('logout') }}">Logout</a>
+        {% endif %}
+        {% if title == 'Create New Account' %}
+        <a href="{{ url_for('login') }}">Back</a>
+        {% endif %}
+    </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>
